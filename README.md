@@ -1,6 +1,7 @@
 LipGAN
 ===================
 *Generate realistic talking faces for any human speech and face identity.*
+
 [[Paper]](https://dl.acm.org/doi/10.1145/3343031.3351066) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/facetoface-translation)  | [[Demonstration Video]](https://www.dailymotion.com/video/x7pxw54)
 
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
