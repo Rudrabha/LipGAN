@@ -60,8 +60,8 @@ Training LipGAN
 -------
 We illustrate the training pipeline using the LRS2 dataset. Adapting for other datasets would involve small modifications to the code. 
 #### Preprocess the dataset
-For preprocessing we first use a Matlab code from https://github.com/Hangz-nju-cuhk/Talking-Face-Generation-DAVS
-We use this code to generate the MFCC files for all the videos present in the dataset.
+For preprocessing we first use a Matlab code from [Talking Face Generation](https://github.com/Hangz-nju-cuhk/Talking-Face-Generation-DAVS)
+We use this code to generate the MFCC files for all the videos present in the dataset. Feel free to experiment with Python [Librosa](https://librosa.github.io/librosa/) library instead of the MATLAB code.  
 
 ```bash
 # Please copy the appropriate LRS2 split's filelist.txt to the filelists/ folder
@@ -92,3 +92,33 @@ python train.py --data_root <path_to_preprocessed_dataset>
 ### Extensive set of training options available. Please run and refer to:
 python train.py --help
 ```
+
+License and Citation
+----------
+The software is licensed under the MIT License. Please cite the following paper if you have use this code:
+
+```
+@inproceedings{KR:2019:TAF:3343031.3351066,
+  author = {K R, Prajwal and Mukhopadhyay, Rudrabha and Philip, Jerin and Jha, Abhishek and Namboodiri, Vinay and Jawahar, C V},
+  title = {Towards Automatic Face-to-Face Translation},
+  booktitle = {Proceedings of the 27th ACM International Conference on Multimedia}, 
+  series = {MM '19}, 
+  year = {2019},
+  isbn = {978-1-4503-6889-6},
+  location = {Nice, France},
+   = {1428--1436},
+  numpages = {9},
+  url = {http://doi.acm.org/10.1145/3343031.3351066},
+  doi = {10.1145/3343031.3351066},
+  acmid = {3351066},
+  publisher = {ACM},
+  address = {New York, NY, USA},
+  keywords = {cross-language talking face generation, lip synthesis, neural machine translation, speech to speech translation, translation systems, voice transfer},
+}
+```
+
+
+Acknowledgements
+----------
+Part of the MATLAB code is taken from the an implementation of the [Talking Face Generation](https://github.com/Hangz-nju-cuhk/Talking-Face-Generation-DAVS) implementation. We thank the authors for releasing their code.
+
