@@ -20,7 +20,7 @@ parser.add_argument('--mat', type=str, help='Filepath of preprocessed mat file f
 parser.add_argument('--results_dir', type=str, help='Folder to save all results into', default='results/')
 
 parser.add_argument('--static', type=bool, help='If True, then use only first video frame for inference', default=False)
-parser.add_argument('--fps', type=float, help='FPS of input video, ignore if image', default=25., required=True)
+parser.add_argument('--fps', type=float, help='FPS of input video, ignore if image', default=25., required=False)
 parser.add_argument('--max_sec', type=float, help='If video, until how many seconds of the clip to use for inference?', default=240.)
 parser.add_argument('--pads', nargs='+', type=int, default=[0, 0, 0, 0], help='Padding (top, bottom, left, right)')
 
@@ -175,7 +175,7 @@ def main():
 			es = (ss + (window_size / 1000.))
 			mid_second = (ss + es) / 2.
 
-	print ("Number of frames to be used for inference: "+str(len(full_frames)))
+		print ("Number of frames to be used for inference: "+str(len(full_frames)))
 
 	mfccs = loadmat(args.mat)['mfccs']
 	mfcc_chunks = []
