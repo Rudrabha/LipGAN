@@ -60,26 +60,32 @@ python batch_inference.py --help
 Training LipGAN
 -------
 We illustrate the training pipeline using the LRS2 dataset. Adapting for other datasets would involve small modifications to the code. 
-#### Preprocess the dataset
-For preprocessing we first use a Matlab code from [Talking Face Generation](https://github.com/Hangz-nju-cuhk/Talking-Face-Generation-DAVS)
-We use this code to generate the MFCC files for all the videos present in the dataset. Feel free to experiment with Python [Librosa](https://librosa.github.io/librosa/) library instead of the MATLAB code.  
+### Preprocess the dataset
+We need to do two things: (i) Save the MFCC features from the audio and (ii) extract and save the facial crops of each frame in the video. 
+
+##### Saving the MFCC features
+We use MATLAB to save the MFCC files for all the videos present in the dataset. Feel free to experiment with Python [Librosa](https://librosa.github.io/librosa/) library instead of the MATLAB code.  
 
 ```bash
-# Please copy the appropriate LRS2 split's filelist.txt to the filelists/ folder
-cd preprocess
+# Please copy the appropriate LRS2 train split's filelist.txt to the filelists/ folder. The example below is shown for LRS2.
+cd matlab
 matlab -nodesktop
-run savemfcc.m
+>> preprocess_mat('../filelists/train.txt', 'mvlrs_v1/main/') # replace with appropriate file paths for other datasets.
+>> exit
+cd ..
 ```
+
+##### Saving the Face Crops of all Video Frames
 We preprocess the video files by detecting faces using a face detector from dlib. 
 ```bash
-# Please copy the appropriate LRS2 split's filelist.txt to the filelists/ folder 
-python preprocess.py --split [train|pretrain|val] --videos_data_root <root_folder_of_LRS2> --final_data_root <folder_to_store_preprocessed_files>
+# Please copy the appropriate LRS2 split's filelist.txt to the filelists/ folder. Example below is shown for LRS2. 
+python preprocess.py --split [train|pretrain|val] --videos_data_root mvlrs_v1/ --final_data_root <folder_to_store_preprocessed_files>
 
-### More options while preprocessing
+### More options while preprocessing (like number of workers, image size etc.)
 python preprocess.py --help
 ```
 #### Train the generator only
-As training LipGAN is computationally intensive, we find that first training the generator separately makes the entire training pipeline fast.  
+As training LipGAN is computationally intensive, you can just train the generator alone for quick, decent results.  
 ```bash
 python train_unet.py --data_root <path_to_preprocessed_dataset>
 

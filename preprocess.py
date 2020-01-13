@@ -125,10 +125,6 @@ parser.add_argument("--final_data_root", help="Folder where preprocessed files w
 
 ### hyperparams ####
 parser.add_argument("--img_size", help="Square face image to resize to", default=96, type=int)
-parser.add_argument("--initial_sr", help="Sampling rate of audio in Hz while splitting into frames",
-					 default=16000, type=int)
-parser.add_argument("--final_sr", help="Final sampling rate for MFCC in Hz",
-					 default=100, type=int)
 
 args = parser.parse_args()
 
