@@ -146,7 +146,7 @@ else:
 
 def main():
 	if args.face.split('.')[1] in ['jpg', 'png', 'jpeg']:
-		frames = [cv2.imread(args.face)]
+		full_frames = [cv2.imread(args.face)]
 	else:
 		video_stream = cv2.VideoCapture(args.face)
 		length = int(video_stream.get(cv2.CAP_PROP_FRAME_COUNT))
