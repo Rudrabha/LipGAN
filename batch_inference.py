@@ -221,7 +221,7 @@ def main():
 			out.write(f)
 	out.release()
 	command = 'ffmpeg -i {} -i {} -strict -2 {}'.format(args.audio, path.join(args.results_dir, 'result.avi'), 
-														path.join(args.results_dir, 'result_voice.mp4'))
+														path.join(args.results_dir, 'result_voice.avi'))
 	subprocess.call(command, shell=True)
 
 if __name__ == '__main__':
