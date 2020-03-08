@@ -211,7 +211,7 @@ def main():
 									cv2.VideoWriter_fourcc(*'DIVX'), fps, (frame_w, frame_h))
 
 		pred = model.predict([img_batch, mfcc_batch])
-		pred = pred*255
+		pred = pred * 255
 		
 		for p, f, c in zip(pred, frames, coords):
 			y1, y2, x1, x2 = c
@@ -219,7 +219,7 @@ def main():
 
 			f[y1:y2, x1:x2] = p
 			out.write(f)
-
+	out.release()
 	command = 'ffmpeg -i {} -i {} -strict -2 {}'.format(args.audio, path.join(args.results_dir, 'result.avi'), 
 														path.join(args.results_dir, 'result_voice.mp4'))
 	subprocess.call(command, shell=True)
