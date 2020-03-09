@@ -11,12 +11,24 @@ from tqdm import tqdm
 from glob import glob
 import pickle, argparse
 
+half_window_size = 4
+mel_step_size = 27
+
 def frame_id(fname):
-	return int(fname.split('.')[0])
+	return int(os.path.basename(fname).split('.')[0])
 
 def choose_ip_frame(frames, gt_frame):
 	selected_frames = [f for f in frames if np.abs(frame_id(gt_frame) - frame_id(f)) >= 6]
 	return np.random.choice(selected_frames)
+
+def get_audio_segment(center_frame, spec):
+	center_frame_id = frame_id(center_frame)
+	start_frame_id = center_frame_id - half_window_size
+
+	start_idx = int((81./25.) * start_frame_id) # 25 is fps of LRS2
+	end_idx = start_idx + mel_step_size
+
+	return spec[:, start_idx : end_idx] if end_idx <= spec.shape[1] else None
 
 def datagen(args):
 	all_images = args.all_images
@@ -27,46 +39,51 @@ def datagen(args):
 		batches = [all_images[i:i + args.batch_size] for i in range(0, len(all_images), args.batch_size)]
 
 		for batch in batches:
-			sys.stderr.flush()
 			img_gt_batch = []
 			img_ip_batch = []
-			mfcc_batch = []
+			mel_batch = []
 			
 			for img_name in batch:
 				gt_fname = os.path.basename(img_name)
 				dir_name = img_name.replace(gt_fname, '')
-				frames = [f for f in os.listdir(dir_name) if f.endswith('.jpg')]
+				frames = glob(dir_name + '/*.jpg')
 				if len(frames) < 12:
 					continue
-				mfcc_fname = img_name[:-3]+"npz"
+
+				mel_fname = dir_name + '/mels.npz'
 				try:
-					mfcc = np.load(mfcc_fname)
+					mel = np.load(mel_fname)['spec']
 				except:
 					continue
-				mfcc = mfcc['mfcc']
-				if sum(np.isnan(mfcc.flatten())) > 0:
+
+				mel = get_audio_segment(gt_fname, mel)
+
+				if mel is None or mel.shape[1] != mel_step_size:
 					continue
-				
-				mfcc_batch.append(mfcc)
+
+				if sum(np.isnan(mel.flatten())) > 0:
+					continue
 				
 				img_gt = cv2.imread(img_name)
 				img_gt = cv2.resize(img_gt, (args.img_size, args.img_size))
-				img_gt_batch.append(img_gt)
-
+				
 				ip_fname = choose_ip_frame(frames, gt_fname)
 				img_ip = cv2.imread(os.path.join(dir_name, ip_fname))
 				img_ip = cv2.resize(img_ip, (args.img_size, args.img_size))
+				
+				img_gt_batch.append(img_gt)
 				img_ip_batch.append(img_ip)
+				mel_batch.append(mel)
 
 			img_gt_batch = np.asarray(img_gt_batch)
 			img_ip_batch = np.asarray(img_ip_batch)
-			mfcc_batch = np.expand_dims(np.asarray(mfcc_batch), 3)
+			mel_batch = np.expand_dims(np.asarray(mel_batch), 3)
 			
 			img_gt_batch_masked = img_gt_batch.copy()
 			img_gt_batch_masked[:, args.img_size//2:,...] = 0.
 			img_ip_batch = np.concatenate([img_ip_batch, img_gt_batch_masked], axis=3)
 			
-			yield [img_ip_batch/255.0, mfcc_batch], img_gt_batch/255.0
+			yield [img_ip_batch/255.0, mel_batch], img_gt_batch/255.0
 
 parser = argparse.ArgumentParser(description='Keras implementation of LipGAN')
 
@@ -97,12 +114,12 @@ else:
 print ("Will be training on {} images".format(len(args.all_images)))
 
 if args.model == 'residual':
-	gen = mg.create_model_residual(args)
+	gen = mg.create_model_residual(args, mel_step_size)
 else:
-	gen = mg.create_model(args)
+	gen = mg.create_model(args, mel_step_size)
 
-disc = md.create_model(args)
-comb = mg.create_combined_model(gen, disc, args)
+disc = md.create_model(args, mel_step_size)
+comb = mg.create_combined_model(gen, disc, args, mel_step_size)
 
 if args.resume_gen:
 	gen.load_weights(args.resume_gen)

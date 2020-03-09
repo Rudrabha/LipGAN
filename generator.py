@@ -50,7 +50,7 @@ def conv_t_block(x, num_filters, kernel_size=3, strides=2, padding='same'):
 
 	return x
 
-def create_model(args):
+def create_model(args, mel_step_size):
 	############# encoder for face/identity
 	input_face = Input(shape=(args.img_size, args.img_size, 6), name="input_face")
 
@@ -64,17 +64,26 @@ def create_model(args):
 	x7_face = conv_block(x6_face, 256, 1, 1)
 
 	############# encoder for audio
-	input_audio = Input(shape=(12,35,1), name="input_audio")
+	input_audio = Input(shape=(80, mel_step_size, 1), name="input_audio")
 
-	x = conv_block(input_audio, 64)
-	x = conv_block(input_audio, 128)
-	x = ZeroPadding2D(((1,0),(0,0)))(x)
-	x = conv_block(x, 256, strides=(1, 2))
+	x = conv_block(input_audio, 32)
+	x = conv_block(x, 32)
+	x = conv_block(x, 32)
+
+	x = conv_block(x, 64, strides=3)	#27X9
+	x = conv_block(x, 64)
+	x = conv_block(x, 64)
+
+	x = conv_block(x, 128, strides=(3, 1)) 		#9X9
+	x = conv_block(x, 128)
+	x = conv_block(x, 128)
+
+	x = conv_block(x, 256, strides=3)	#3X3
 	x = conv_block(x, 256)
-	x = conv_block(x, 256, strides=2)
-	x = conv_block(x, 512, strides=2)
-	x = conv_block(x, 512, (4, 5), 1, padding='valid')
-	x = conv_block(x, 256, 1, 1)
+	x = conv_block(x, 256)
+
+	x = conv_block(x, 512, strides=1, padding='valid')	#1X1
+	x = conv_block(x, 512, 1, 1)
 
 	embedding = Concatenate(axis=3)([x7_face, x])
 
@@ -116,7 +125,7 @@ def create_model(args):
 	
 	return parallel_model, ser_model
 
-def create_model_residual(args):
+def create_model_residual(args, mel_step_size):
 	def residual_block(inp, num_filters):
 		x = conv_block(inp, num_filters)
 		x = conv_block(x, num_filters)
@@ -153,26 +162,25 @@ def create_model_residual(args):
 	x7_face = conv_block(x6_face, 512, 1, 1)
 
 	############# encoder for audio
-	input_audio = Input(shape=(12,35,1), name="input_audio")
+	input_audio = Input(shape=(80, mel_step_size, 1), name="input_audio")
 
-	x = conv_block(input_audio, 128)
-	x = residual_block(x, 128)
+	x = conv_block(input_audio, 32)
+	x = residual_block(x, 32)
+	x = residual_block(x, 32)
+
+	x = conv_block(x, 64, strides=3)	#27X9
+	x = residual_block(x, 64)
+	x = residual_block(x, 64)
+
+	x = conv_block(x, 128, strides=(3, 1)) 		#9X9
 	x = residual_block(x, 128)
 	x = residual_block(x, 128)
 
-	x = ZeroPadding2D(((1,0),(0,0)))(x)
-	x = conv_block(x, 256, strides=(1, 2))
+	x = conv_block(x, 256, strides=3)	#3X3
 	x = residual_block(x, 256)
 	x = residual_block(x, 256)
 
-	x = conv_block(x, 512, strides=2)
-	x = residual_block(x, 512)
-	x = residual_block(x, 512)
-
-	x = conv_block(x, 512, strides=2)
-	x = residual_block(x, 512)
-
-	x = conv_block(x, 512, (4, 5), 1, padding='valid')
+	x = conv_block(x, 512, strides=1, padding='valid')	#1X1
 	x = conv_block(x, 512, 1, 1)
 
 	embedding = Concatenate(axis=3)([x7_face, x])
@@ -219,9 +227,9 @@ def create_model_residual(args):
 	
 	return model
 
-def create_combined_model(generator, discriminator, args):
+def create_combined_model(generator, discriminator, args, mel_step_size):
 	input_face = Input(shape=(args.img_size, args.img_size, 6), name="input_face_comb")
-	input_audio = Input(shape=(12, 35, 1), name="input_audio_comb")
+	input_audio = Input(shape=(80, mel_step_size, 1), name="input_audio_comb")
 
 	fake_face = generator([input_face, input_audio])
 	discriminator.trainable = False
@@ -232,7 +240,8 @@ def create_combined_model(generator, discriminator, args):
 		model = ModelMGPU(model , args.n_gpu)
 
 	model.compile(loss=['mae', contrastive_loss], 
-							optimizer=(Adam(lr=args.lr) if hasattr(args, 'lr') else 'adam'), loss_weights=[1., .01])
+					optimizer=(Adam(lr=args.lr) if hasattr(args, 'lr') else 'adam'), 
+					loss_weights=[1., .01])
 
 	return model
 

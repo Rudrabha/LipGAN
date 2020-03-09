@@ -47,7 +47,7 @@ def conv_block(x, num_filters, kernel_size=3, strides=2, padding='same'):
 	x = LeakyReLU(alpha=.2)(x)
 	return x
 
-def create_model(args):
+def create_model(args, mel_step_size):
 	############# encoder for face/identity
 	input_face = Input(shape=(args.img_size, args.img_size, 3), name="input_face_disc")
 
@@ -60,16 +60,15 @@ def create_model(args):
 	face_embedding = Flatten() (x)
 
 	############# encoder for audio
-	input_audio = Input(shape=(12,35,1), name="input_audio_disc")
+	input_audio = Input(shape=(80, mel_step_size, 1), name="input_audio")
 
-	x = conv_block(input_audio, 64, 3, 1)
-	x = conv_block(x, 128, 3, 1)
-	x = ZeroPadding2D(((1,0),(0,0)))(x)
-	x = conv_block(x, 256, 3, (1, 2))
-	x = conv_block(x, 256, 3, 1)
-	x = conv_block(x, 256, 3, 2)
-	x = conv_block(x, 512, 3, 2)
-	x = Conv2D(filters=512, kernel_size = (4, 5),strides=(1,1), padding="valid")(x)
+	x = conv_block(input_audio, 32, strides=1)
+	x = conv_block(x, 64, strides=3)	#27X9
+	x = conv_block(x, 128, strides=(3, 1)) 		#9X9
+	x = conv_block(x, 256, strides=3)	#3X3
+	x = conv_block(x, 512, strides=1, padding='valid')	#1X1
+	x = conv_block(x, 512, 1, strides=1)
+
 	audio_embedding = Flatten() (x)
 
 	# L2-normalize before taking L2 distance
