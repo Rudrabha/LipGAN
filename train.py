@@ -178,4 +178,4 @@ for e in range(args.epochs):
 			collage = np.clip(collage, 0., 255.).astype(np.uint8)
 			
 			for i in range(len(collage)):
-				cv2.imwrite(path.join(args.logdir, 'gen_faces/{}.jpg'.format(i), collage[i]))
+				cv2.imwrite(path.join(args.logdir, 'gen_faces/{}.jpg'.format(i)), collage[i])

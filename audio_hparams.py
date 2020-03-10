@@ -2,22 +2,6 @@ from tensorflow.contrib.training import HParams
 from glob import glob
 import os, pickle
 
-def _get_image_list(split):
-	pkl_file = 'logs/filenames_{}.pkl'.format(split)
-	if os.path.exists(pkl_file):
-		with open(pkl_file, 'rb') as p:
-			return pickle.load(p)
-	else:
-		filelist = glob('../female_preprocessed/*/*.jpg')
-		if split == 'train':
-			filelist = filelist[:int(.9 * len(filelist))]
-		else:
-			filelist = filelist[int(.9 * len(filelist)):]
-
-		with open(pkl_file, 'wb') as p:
-			pickle.dump(filelist, p, protocol=pickle.HIGHEST_PROTOCOL)
-		return filelist
-
 # Default hyperparameters
 hparams = HParams(
 	num_mels=80,  # Number of mel-spectrogram channels and local conditioning dimensionality
@@ -78,46 +62,6 @@ hparams = HParams(
 	# Only used in G&L inversion, usually values between 1.2 and 1.5 are a good choice.
 	griffin_lim_iters=60,
 	# Number of G&L iterations, typically 30 is enough but we use 60 to ensure convergence.
-	###########################################################################################################################################
-	
-	# Model params
-	builder='nyanko',
-	downsample_step=4,
-	max_positions=512,
-	binary_divergence_weight=0.,
-	priority_freq=3000,
-	use_guided_attention=True,
-    guided_attention_sigma=0.2,
-
-	T=75,
-	overlap=25,
-	mel_overlap=80,
-	mel_step_size=240,
-	img_size=48,
-	fps=25,
-	#all_images=_get_image_list('train'),
-	#all_test_images=_get_image_list('test'),
-	n_gpu=1,
-	resume=False,
-	checkpoint_dir = 'checkpoints/',
-	checkpoint_path=None,
-	best_checkpoint_path='logs/best3d_75.h5',
-
-	batch_size=64,
-	adam_beta1=0.5,
-    adam_beta2=0.9,
-    adam_eps=1e-6,
-    amsgrad=False,
-    initial_learning_rate=5e-4,
-    lr_schedule=None,#"noam_learning_rate_decay",
-    lr_schedule_kwargs={},
-    nepochs=2000,
-    weight_decay=0.0,
-    clip_thresh=0.1,
-	num_workers=6,
-	checkpoint_interval=1000,
-    eval_interval=1000,
-    save_optimizer_state=True,
 )
 
 

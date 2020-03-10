@@ -59,13 +59,7 @@ def inv_linear_spectrogram(linear_spectrogram):
     
     S = _db_to_amp(D + hp.ref_level_db) #Convert back to linear
     
-    if hp.use_lws:
-        processor = _lws_processor(hp)
-        D = processor.run_lws(S.astype(np.float64).T ** hp.power)
-        y = processor.istft(D).astype(np.float32)
-        return inv_preemphasis(y, hp.preemphasis, hp.preemphasize)
-    else:
-        return inv_preemphasis(_griffin_lim(S ** hp.power), hp.preemphasis, hp.preemphasize)
+    return inv_preemphasis(_griffin_lim(S ** hp.power), hp.preemphasis, hp.preemphasize)
 
 def inv_mel_spectrogram(mel_spectrogram):
     """Converts mel spectrogram to waveform using librosa"""
@@ -76,17 +70,7 @@ def inv_mel_spectrogram(mel_spectrogram):
     
     S = _mel_to_linear(_db_to_amp(D + hp.ref_level_db))  # Convert back to linear
     
-    if hp.use_lws:
-        processor = _lws_processor(hp)
-        D = processor.run_lws(S.astype(np.float64).T ** hp.power)
-        y = processor.istft(D).astype(np.float32)
-        return inv_preemphasis(y, hp.preemphasis, hp.preemphasize)
-    else:
-        return inv_preemphasis(_griffin_lim(S ** hp.power), hp.preemphasis, hp.preemphasize)
-
-def _lws_processor():
-    import lws
-    return lws.lws(hp.n_fft, get_hop_size(), fftsize=hp.win_size, mode="speech")
+    return inv_preemphasis(_griffin_lim(S ** hp.power), hp.preemphasis, hp.preemphasize)
 
 def _griffin_lim(S):
     """librosa implementation of Griffin-Lim
@@ -101,10 +85,7 @@ def _griffin_lim(S):
     return y
 
 def _stft(y):
-    if hp.use_lws:
-        return _lws_processor(hp).stft(y).T
-    else:
-        return librosa.stft(y=y, n_fft=hp.n_fft, hop_length=get_hop_size(), win_length=hp.win_size)
+    return librosa.stft(y=y, n_fft=hp.n_fft, hop_length=get_hop_size(), win_length=hp.win_size)
 
 def _istft(y):
     return librosa.istft(y, hop_length=get_hop_size(), win_length=hp.win_size)

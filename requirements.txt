@@ -9,3 +9,4 @@ scikit-image==0.15.0
 scipy==1.0.0
 tensorflow-gpu==1.8.0
 tqdm==4.19.9
+librosa==0.7.0

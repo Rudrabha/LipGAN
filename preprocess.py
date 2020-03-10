@@ -7,12 +7,9 @@ import multiprocessing as mp
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from os import listdir, path
 import numpy as np
-import argparse, os, cv2, traceback
+import argparse, os, cv2, traceback, subprocess
 from tqdm import tqdm
-import dlib
-from imutils.face_utils import FaceAligner
-from imutils.face_utils import rect_to_bb
-from scipy.io import loadmat
+import dlib, audio
 
 detector = dlib.get_frontal_face_detector()
 	
@@ -53,6 +50,8 @@ mfcc_step_size = 4
 fps = 25
 video_step_size_in_ms = mfcc_step_size * 10 # for 25 fps video
 
+template = 'ffmpeg -loglevel panic -y -i {} -ar 16000 {}'
+
 def process_video_file(vfile, args, split):
 	video_stream = cv2.VideoCapture(vfile)
 	frames = []
@@ -73,27 +72,34 @@ def process_video_file(vfile, args, split):
 		ss += (video_step_size_in_ms / 1000.)
 		es = (ss + (window_size / 1000.))
 
-	mfccs = loadmat(vfile.replace('.mp4', '.mat'))['mfccs']
 
-	mfcc_chunks = [mfccs[:,i:i + mfcc_chunk_size] for i in \
-				 range(0, len(mfccs[0]) - (mfcc_chunk_size - 1), mfcc_step_size)]
-	
 	dst_subdir = path.join(vfile.split('/')[-2], vfile.split('/')[-1].split('.')[0])
+	fulldir = path.join(args.final_data_root, split, dst_subdir)
+	os.makedirs(fulldir, exist_ok=True)
+	wavpath = path.join(fulldir, 'audio.wav')
 
-	for i, (f, m) in enumerate(zip(mid_frames, mfcc_chunks)):
+	command = template.format(vfile, wavpath)
+	subprocess.call(command, shell=True)
+
+	specpath = path.join(fulldir, 'mels.npz')
+
+	if path.isfile(wavpath):
+		wav = audio.load_wav(wavpath, sr)
+
+		spec = audio.melspectrogram(wav)
+		np.savez_compressed(specpath, spec=spec)
+	else:
+		return
+
+	for i, f in enumerate(mid_frames):
 		face, valid_frame = face_detect(f)
 
 		if not valid_frame:
 			continue
 		
 		resized_face = cv2.resize(face, (args.img_size, args.img_size))
-
-		fulldir = path.join(args.final_data_root, split, dst_subdir)
-		os.makedirs(fulldir, exist_ok=True)
-		fullpath = path.join(fulldir, '{}.{}')
-
-		cv2.imwrite(fullpath.format(i, 'jpg'), resized_face)
-		np.savez_compressed(fullpath.format(i, 'npz'), mfcc=m)
+		
+		cv2.imwrite(path.join(fulldir, '{}.jpg'.format(i)), resized_face)
 	
 def mp_handler(job):
 	vfile, args, split = job

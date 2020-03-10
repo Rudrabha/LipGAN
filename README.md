@@ -20,7 +20,6 @@ Prerequisites
 -------------
 - Python >= 3.5
 - ffmpeg: `sudo apt-get install ffmpeg`
-- Matlab R2016a (for audio preprocessing, this dependency will be removed in later versions)
 - Install necessary packages using `pip install -r requirements.txt`
 - Install keras-contrib `pip install git+https://www.github.com/keras-team/keras-contrib.git`
 
@@ -29,30 +28,23 @@ Getting the weights
 Download checkpoints of the folowing models into the `logs/` folder
 
 - CNN Face detection using dlib: [Link](http://dlib.net/files/mmod_human_face_detector.dat.bz2)
-- LipGAN [Google Drive](https://drive.google.com/open?id=1ZTIt0XII4ZPulMNZbq2yg0x7zQBG6n9e)
+- LipGAN [Google Drive](https://drive.google.com/file/d/1DtXY5Ei_V6QjrLwfe7YDrmbSCDu6iru1/view?usp=sharing)
 
 Generating talking face videos using pretrained models (Inference)
 -------
-LipGAN takes speech features in the form of MFCCs and we need to preprocess our input audio file to get the MFCC features. We use the `create_mat.m` script to create `.mat` files for a given audio. 
-```bash
-cd matlab
-matlab -nodesktop
->> create_mat(input_wav_or_mp4_file, path_to_output.mat) # replace with file paths
->> exit
-cd ..
 ```
 #### Usage #1: Generating correct lip motion on a random talking face video
 Here, we are given an audio input (as `.mat` MFCC features) and a video of an identity speaking something entirely different. LipGAN can synthesize the correct lip motion for the given audio and overlay it on the given video of the speaking identity (Example #1, #2 in the above image).
 
 ```bash
-python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_video> --fps <fps_of_input_video> --audio <guiding_audio_wav_file> --mat <mat_file_from_above> --results_dir <folder_to_save_generated_video>
+python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_video> --fps <fps_of_input_video> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
 ```
 The generated `result_voice.mp4` will contain the input video lip synced with the given input audio. Note that the FPS parameter is by default `25`, **make sure you set the FPS correctly for your own input video**.
 
 #### Usage #2: Generating talking video from a single face image
 Refer to example #3 in the above picture. Given an audio, LipGAN generates a correct mouth shape (viseme) at each time-step and overlays it on the input image. The sequence of generated mouth shapes yields a talking face video.
 ```bash
-python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_face> --audio <guiding_audio_wav_file> --mat <mat_file_from_above> --results_dir <folder_to_save_generated_video>
+python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_face> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
 ```
 
 #### More options
@@ -63,22 +55,8 @@ Training LipGAN
 -------
 We illustrate the training pipeline using the LRS2 dataset. Adapting for other datasets would involve small modifications to the code. 
 ### Preprocess the dataset
-We need to do two things: (i) Save the MFCC features from the audio and (ii) extract and save the facial crops of each frame in the video. 
+We use Python [Librosa](https://librosa.github.io/librosa/) library to save melspectrogram features and perform face detection using dlib.  
 
-##### Saving the MFCC features
-We use MATLAB to save the MFCC files for all the videos present in the dataset. Feel free to experiment with Python [Librosa](https://librosa.github.io/librosa/) library instead of the MATLAB code.  
-
-```bash
-# Please copy the appropriate LRS2 train split's filelist.txt to the filelists/ folder. The example below is shown for LRS2.
-cd matlab
-matlab -nodesktop
->> preprocess_mat('../filelists/train.txt', 'mvlrs_v1/main/') # replace with appropriate file paths for other datasets.
->> exit
-cd ..
-```
-
-##### Saving the Face Crops of all Video Frames
-We preprocess the video files by detecting faces using a face detector from dlib. 
 ```bash
 # Please copy the appropriate LRS2 split's filelist.txt to the filelists/ folder. Example below is shown for LRS2. 
 python preprocess.py --split [train|pretrain|val] --videos_data_root mvlrs_v1/ --final_data_root <folder_to_store_preprocessed_files>
@@ -129,5 +107,5 @@ The software is licensed under the MIT License. Please cite the following paper 
 
 Acknowledgements
 ----------
-Part of the MATLAB code is taken from the an implementation of the [Talking Face Generation](https://github.com/Hangz-nju-cuhk/Talking-Face-Generation-DAVS) implementation. We thank the authors for releasing their code.
+Part of the audio preprocessing code is taken from the [DeepVoice 3](https://github.com/r9y9/deepvoice3_pytorch) implementation. We thank the author for releasing their code.
 
