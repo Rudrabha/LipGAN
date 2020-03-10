@@ -22,6 +22,7 @@ Prerequisites
 - ffmpeg: `sudo apt-get install ffmpeg`
 - Install necessary packages using `pip install -r requirements.txt`
 - Install keras-contrib `pip install git+https://www.github.com/keras-team/keras-contrib.git`
+- git clone `https://github.com/Rudrabha/LipGAN.git` (make sure to check out to branch `fully_pythonic`)
 
 Getting the weights
 ----------
