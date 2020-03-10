@@ -8,6 +8,10 @@ LipGAN
 
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
 ----------
+
+**Code without MATLAB dependency is now available in `fully_pythonic` branch**. Note that the models in both the branches are not entirely identical and one may perform better than the other in several cases. The model used at the time of the paper's publication is with the MATLAB dependency. 
+
+----------
  Features
 ---------
  - Can handle in-the-wild face poses and expressions.
