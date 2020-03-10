@@ -10,8 +10,6 @@ import numpy as np
 import argparse, os, cv2, traceback
 from tqdm import tqdm
 import dlib
-from imutils.face_utils import FaceAligner
-from imutils.face_utils import rect_to_bb
 from scipy.io import loadmat
 
 detector = dlib.get_frontal_face_detector()
