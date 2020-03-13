@@ -9,7 +9,7 @@ LipGAN
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
 ----------
 
-**Code without MATLAB dependency is now available in `fully_pythonic` branch**. Note that the models in both the branches are not entirely identical and one may perform better than the other in several cases. The model used at the time of the paper's publication is with the MATLAB dependency. 
+**Code without MATLAB dependency is now available in `fully_pythonic` branch**. Note that the models in both the branches are not entirely identical and either one may perform better than the other in several cases. The model used at the time of the paper's publication is with the MATLAB dependency and this is the one that has been extensively tested. Please feel free to experiment with the `fully_pythonic` branch if you do not want to have the MATLAB dependency.
 
 ----------
  Features
@@ -70,7 +70,7 @@ We illustrate the training pipeline using the LRS2 dataset. Adapting for other d
 We need to do two things: (i) Save the MFCC features from the audio and (ii) extract and save the facial crops of each frame in the video. 
 
 ##### Saving the MFCC features
-We use MATLAB to save the MFCC files for all the videos present in the dataset. Feel free to experiment with Python [Librosa](https://librosa.github.io/librosa/) library instead of the MATLAB code.  
+We use MATLAB to save the MFCC files for all the videos present in the dataset. Refer to the [fully_pythonic branch](https://github.com/Rudrabha/LipGAN/tree/fully_pythonic) if you do not want to use MATLAB.  
 
 ```bash
 # Please copy the appropriate LRS2 train split's filelist.txt to the filelists/ folder. The example below is shown for LRS2.
