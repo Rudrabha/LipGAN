@@ -33,9 +33,9 @@ parser.add_argument('--face_det_batch_size', type=int,
 					help='Single GPU batch size for face detection', default=64)
 parser.add_argument('--lipgan_batch_size', type=int, help='Single GPU batch size for LipGAN', default=256)
 parser.add_argument('--n_gpu', help='Number of GPUs to use', default=1)
-parser.add_argument('--img_size', help='Size of input image', default=96)
 
 args = parser.parse_args()
+args.img_size = 96
 
 if args.face.split('.')[1] in ['jpg', 'png', 'jpeg']:
 	args.static = True
