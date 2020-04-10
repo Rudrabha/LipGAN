@@ -69,6 +69,13 @@ We illustrate the training pipeline using the LRS2 dataset. Adapting for other d
 ### Preprocess the dataset
 We need to do two things: (i) Save the MFCC features from the audio and (ii) extract and save the facial crops of each frame in the video. 
 
+##### LRS2 dataset folder structure
+```
+data_root (mvlrs_v1)
+├── main, pretrain (we use only main folder in this work)
+|	├── list of folders
+|	│   ├── five-digit numbered video IDs ending with (.mp4)
+```
 ##### Saving the MFCC features
 We use MATLAB to save the MFCC files for all the videos present in the dataset. Refer to the [fully_pythonic branch](https://github.com/Rudrabha/LipGAN/tree/fully_pythonic) if you do not want to use MATLAB.  
 
@@ -90,6 +97,16 @@ python preprocess.py --split [train|pretrain|val] --videos_data_root mvlrs_v1/ -
 ### More options while preprocessing (like number of workers, image size etc.)
 python preprocess.py --help
 ```
+####### Final preprocessed folder structure
+```
+data_root (mvlrs_v1)
+├── main, pretrain (we use only main folder in this work)
+|	├── list of folders
+|	│   ├── folders with five-digit video IDs 
+|	│   |	 ├── 0.jpg, 1.jpg .... (extracted face crops of each frame)
+|	│   |	 ├── 0.npz, 1.npz .... (mfcc features corresponding to each frame)
+```
+
 #### Train the generator only
 As training LipGAN is computationally intensive, you can just train the generator alone for quick, decent results.  
 ```bash
