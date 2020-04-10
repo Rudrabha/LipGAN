@@ -56,6 +56,15 @@ python batch_inference.py --help
 Training LipGAN
 -------
 We illustrate the training pipeline using the LRS2 dataset. Adapting for other datasets would involve small modifications to the code. 
+
+###### LRS2 dataset folder structure
+```
+data_root (mvlrs_v1)
+├── main, pretrain (we use only main folder in this work)
+|	├── list of folders
+|	│   ├── five-digit numbered video IDs ending with (.mp4)
+```
+
 ### Preprocess the dataset
 We use Python [Librosa](https://librosa.github.io/librosa/) library to save melspectrogram features and perform face detection using dlib.  
 
@@ -66,6 +75,16 @@ python preprocess.py --split [train|pretrain|val] --videos_data_root mvlrs_v1/ -
 ### More options while preprocessing (like number of workers, image size etc.)
 python preprocess.py --help
 ```
+###### Final preprocessed folder structure
+```
+data_root (mvlrs_v1)
+├── main, pretrain (we use only main folder in this work)
+|	├── list of folders
+|	│   ├── folders with five-digit video IDs 
+|	│   |	 ├── 0.jpg, 1.jpg .... (extracted face crops of each frame)
+|	│   |	 ├── mels.npz, audio.wav (melspectrogram and raw audio of the whole video)
+```
+
 #### Train the generator only
 As training LipGAN is computationally intensive, you can just train the generator alone for quick, decent results.  
 ```bash
