@@ -97,7 +97,7 @@ python preprocess.py --split [train|pretrain|val] --videos_data_root mvlrs_v1/ -
 ### More options while preprocessing (like number of workers, image size etc.)
 python preprocess.py --help
 ```
-####### Final preprocessed folder structure
+###### Final preprocessed folder structure
 ```
 data_root (mvlrs_v1)
 ├── main, pretrain (we use only main folder in this work)
