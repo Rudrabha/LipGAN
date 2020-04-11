@@ -49,8 +49,9 @@ mfcc_chunk_size = window_size // 10
 mfcc_step_size = 4
 fps = 25
 video_step_size_in_ms = mfcc_step_size * 10 # for 25 fps video
+sr = 16000
 
-template = 'ffmpeg -loglevel panic -y -i {} -ar 16000 {}'
+template = 'ffmpeg -loglevel panic -y -i {} -ar {} {}'
 
 def process_video_file(vfile, args, split):
 	video_stream = cv2.VideoCapture(vfile)
@@ -78,7 +79,7 @@ def process_video_file(vfile, args, split):
 	os.makedirs(fulldir, exist_ok=True)
 	wavpath = path.join(fulldir, 'audio.wav')
 
-	command = template.format(vfile, wavpath)
+	command = template.format(vfile, sr, wavpath)
 	subprocess.call(command, shell=True)
 
 	specpath = path.join(fulldir, 'mels.npz')
@@ -113,9 +114,9 @@ def dump_split(args):
 
 	filelist = [path.join(args.videos_data_root, ('pretrain' if args.split == 'pretrain' else 'main'), 
 				'{}.mp4'.format(line.strip())) \
-				for line in open(path.join(args.filelists, '{}.txt'.format(split))).readlines()]
+				for line in open(path.join(args.filelists, '{}.txt'.format(args.split))).readlines()]
 	
-	jobs = [(vfile, args, split) for vfile in filelist]
+	jobs = [(vfile, args, ('pretrain' if args.split == 'pretrain' else 'main')) for vfile in filelist]
 	p = ThreadPoolExecutor(args.num_workers)
 	futures = [p.submit(mp_handler, j) for j in jobs]
 	_ = [r.result() for r in tqdm(as_completed(futures), total=len(futures))]
