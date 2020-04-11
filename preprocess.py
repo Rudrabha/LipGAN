@@ -105,9 +105,9 @@ def dump_split(args):
 
 	filelist = [path.join(args.videos_data_root, ('pretrain' if args.split == 'pretrain' else 'main'), 
 				'{}.mp4'.format(line.strip())) \
-				for line in open(path.join(args.filelists, '{}.txt'.format(split))).readlines()]
+				for line in open(path.join(args.filelists, '{}.txt'.format(args.split))).readlines()]
 	
-	jobs = [(vfile, args, split) for vfile in filelist]
+	jobs = [(vfile, args, ('pretrain' if args.split == 'pretrain' else 'main')) for vfile in filelist]
 	p = ThreadPoolExecutor(args.num_workers)
 	futures = [p.submit(mp_handler, j) for j in jobs]
 	_ = [r.result() for r in tqdm(as_completed(futures), total=len(futures))]
