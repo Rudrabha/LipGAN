@@ -25,7 +25,7 @@ def get_audio_segment(center_frame, spec):
 	center_frame_id = frame_id(center_frame)
 	start_frame_id = center_frame_id - half_window_size
 
-	start_idx = int((81./25.) * start_frame_id) # 25 is fps of LRS2
+	start_idx = int((80./25.) * start_frame_id) # 25 is fps of LRS2
 	end_idx = start_idx + mel_step_size
 
 	return spec[:, start_idx : end_idx] if end_idx <= spec.shape[1] else None
