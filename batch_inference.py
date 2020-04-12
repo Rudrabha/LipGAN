@@ -135,7 +135,7 @@ def datagen(frames, mels):
 
 fps = args.fps
 mel_step_size = 27
-mel_idx_multiplier = 81./fps
+mel_idx_multiplier = 80./fps
 
 if 'residual' in args.checkpoint_path:
 	from generator import create_model_residual as create_model
