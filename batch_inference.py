@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser(description='Code to generate talking face usin
 
 parser.add_argument('--checkpoint_path', type=str, 
 					help='Name of saved checkpoint to load weights from', required=True)
+parser.add_argument('--model', type=str, help='Model name to use: basic|residual', default='residual')
+
 parser.add_argument('--face_det_checkpoint', type=str, help='Name of saved checkpoint for face detection', 
 						default='logs/mmod_human_face_detector.dat')
 
@@ -137,7 +139,7 @@ fps = args.fps
 mel_step_size = 27
 mel_idx_multiplier = 80./fps
 
-if 'residual' in args.checkpoint_path:
+if args.model == 'residual':
 	from generator import create_model_residual as create_model
 else:
 	from generator import create_model as create_model

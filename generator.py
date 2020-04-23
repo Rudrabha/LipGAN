@@ -115,15 +115,12 @@ def create_model(args, mel_step_size):
 	model = Model(inputs=[input_face, input_audio], outputs=prediction)
 	model.summary()		
 	
-	ser_model = model
 	if args.n_gpu > 1:
-		parallel_model = ModelMGPU(ser_model , args.n_gpu)
-	else:
-		parallel_model = ser_model
+		model = ModelMGPU(model , args.n_gpu)
 		
-	parallel_model.compile(loss='mae', optimizer=(Adam(lr=args.lr) if hasattr(args, 'lr') else 'adam')) 
+	model.compile(loss='mae', optimizer=(Adam(lr=args.lr) if hasattr(args, 'lr') else 'adam')) 
 	
-	return parallel_model, ser_model
+	return model
 
 def create_model_residual(args, mel_step_size):
 	def residual_block(inp, num_filters):

@@ -38,7 +38,7 @@ Generating talking face videos using pretrained models (Inference)
 Here, we are given an audio input and a video of an identity speaking something entirely different. LipGAN can synthesize the correct lip motion for the given audio and overlay it on the given video of the speaking identity (Example #1, #2 in the above image).
 
 ```bash
-python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_video> --fps <fps_of_input_video> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
+python batch_inference.py --checkpoint_path <saved_checkpoint> --model residual --face <random_input_video> --fps <fps_of_input_video> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
 ```
 
 The generated `result_voice.mp4` will contain the input video lip synced with the given input audio. Note that the FPS parameter is by default `25`, **make sure you set the FPS correctly for your own input video**.
@@ -46,7 +46,7 @@ The generated `result_voice.mp4` will contain the input video lip synced with th
 #### Usage #2: Generating talking video from a single face image
 Refer to example #3 in the above picture. Given an audio, LipGAN generates a correct mouth shape (viseme) at each time-step and overlays it on the input image. The sequence of generated mouth shapes yields a talking face video.
 ```bash
-python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_face> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
+python batch_inference.py --checkpoint_path <saved_checkpoint> --model residual --face <random_input_face> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
 ```
 
 #### More options
