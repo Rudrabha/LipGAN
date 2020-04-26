@@ -28,8 +28,6 @@ Prerequisites
 - Install necessary packages using `pip install -r requirements.txt`
 - Install keras-contrib `pip install git+https://www.github.com/keras-team/keras-contrib.git`
 
-Alternatively, if you would like to try it on Google Colab, please refer to this [notebook](https://colab.research.google.com/drive/1NLUwupCBsB1HrpEmOIHeMgU63sus2LxP) [Credits: [Kirill](https://github.com/KirillR911)]
-
 Getting the weights
 ----------
 Download checkpoints of the folowing models into the `logs/` folder
