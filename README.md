@@ -8,8 +8,6 @@ LipGAN
 
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
 ----------
-New 
-----------
 **Code without MATLAB dependency is now available in `fully_pythonic` branch**. Note that the models in both the branches are not entirely identical and either one may perform better than the other in several cases. The model used at the time of the paper's publication is with the MATLAB dependency and this is the one that has been extensively tested. Please feel free to experiment with the `fully_pythonic` branch if you do not want to have the MATLAB dependency. 
 **A Google Colab [notebook](https://colab.research.google.com/drive/1NLUwupCBsB1HrpEmOIHeMgU63sus2LxP) is also available for the `fully_pythonic` branch. [Credits: [Kirill](https://github.com/KirillR911)]**
 
