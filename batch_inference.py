@@ -98,7 +98,7 @@ def datagen(frames, mfccs):
 		frame_to_save = frames[idx].copy()
 		face, coords, valid_frame = face_det_results[idx].copy()
 		if not valid_frame:
-			print ("Face not detected, skipping {}".format(i))
+			print ("Face not detected, skipping frame {}".format(i))
 			continue
 
 		face = cv2.resize(face, (args.img_size, args.img_size))
