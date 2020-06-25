@@ -50,7 +50,7 @@ Refer to example #3 in the above picture. Given an audio, LipGAN generates a cor
 ```bash
 python batch_inference.py --checkpoint_path <saved_checkpoint> --model residual --face <random_input_face> --audio <guiding_audio_wav_file> --results_dir <folder_to_save_generated_video>
 ```
-
+**Please use the --pads argument to correct for inaccurate face detections such as not covering the chin region correctly. This can improve the results further.** 
 #### More options
 ```bash
 python batch_inference.py --help
