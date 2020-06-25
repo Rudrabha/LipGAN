@@ -51,14 +51,14 @@ Here, we are given an audio input (as `.mat` MFCC features) and a video of an id
 ```bash
 python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_video> --fps <fps_of_input_video> --audio <guiding_audio_wav_file> --mat <mat_file_from_above> --results_dir <folder_to_save_generated_video>
 ```
-The generated `result_voice.mp4` will contain the input video lip synced with the given input audio. Note that the FPS parameter is by default `25`, **make sure you set the FPS correctly for your own input video**.
+The generated `result_voice.mp4` will contain the input video lip synced with the given input audio. Note that the FPS parameter is by default `25`, **make sure you set the FPS correctly for your own input video**. 
 
 #### Usage #2: Generating talking video from a single face image
 Refer to example #3 in the above picture. Given an audio, LipGAN generates a correct mouth shape (viseme) at each time-step and overlays it on the input image. The sequence of generated mouth shapes yields a talking face video.
 ```bash
 python batch_inference.py --checkpoint_path <saved_checkpoint> --face <random_input_face> --audio <guiding_audio_wav_file> --mat <mat_file_from_above> --results_dir <folder_to_save_generated_video>
 ```
-
+**Please use the --pads argument to correct for inaccurate face detections such as not covering the chin region correctly. This can improve the results further.** 
 #### More options
 ```bash
 python batch_inference.py --help
