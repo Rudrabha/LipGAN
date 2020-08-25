@@ -7,6 +7,10 @@ LipGAN
 [[Paper]](https://dl.acm.org/doi/10.1145/3343031.3351066) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/facetoface-translation)  | [[Demonstration Video]](https://www.youtube.com/watch?v=aHG6Oei8jF0&list=LL2W0lqk_iPaqSlgPZ9GNv6w)
 
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
+
+# Important Update:
+A new, improved work that can produce significantly more accurate and natural results is available here: https://github.com/Rudrabha/Wav2Lip
+
 ----------
  Features
 ---------
