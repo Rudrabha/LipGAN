@@ -9,7 +9,7 @@ LipGAN
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
 
 # Important Update:
-A new, improved work that can produce significantly more accurate and natural results is available here: https://github.com/Rudrabha/Wav2Lip
+A new, improved work that can produce significantly more accurate and natural results on moving talking face videos is available here: https://github.com/Rudrabha/Wav2Lip
 
 ----------
 **Code without MATLAB dependency is now available in `fully_pythonic` branch**. Note that the models in both the branches are not entirely identical and either one may perform better than the other in several cases. The model used at the time of the paper's publication is with the MATLAB dependency and this is the one that has been extensively tested. Please feel free to experiment with the `fully_pythonic` branch if you do not want to have the MATLAB dependency. 
