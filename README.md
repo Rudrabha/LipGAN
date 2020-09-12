@@ -2,7 +2,7 @@ LipGAN
 ===================
 *Generate realistic talking faces for any human speech and face identity.*
 
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/towards-automatic-face-to-face-translation/talking-face-generation-on-lrw)](https://paperswithcode.com/sota/talking-face-generation-on-lrw?p=towards-automatic-face-to-face-translation)
+
 
 [[Paper]](https://dl.acm.org/doi/10.1145/3343031.3351066) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/facetoface-translation)  | [[Demonstration Video]](https://www.youtube.com/watch?v=aHG6Oei8jF0&list=LL2W0lqk_iPaqSlgPZ9GNv6w)
 
