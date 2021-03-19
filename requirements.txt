@@ -4,7 +4,7 @@ Keras==2.2.4
 matplotlib==2.1.0
 numpy==1.13.3
 opencv-python==4.0.0.21
-Pillow==5.4.1
+Pillow==8.1.1
 scikit-image==0.15.0
 scipy==1.0.0
 tensorflow-gpu==1.8.0
