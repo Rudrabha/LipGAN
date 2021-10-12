@@ -3,7 +3,7 @@ h5py==2.9.0
 Keras==2.2.4
 matplotlib==2.1.0
 numpy==1.13.3
-opencv-python==4.0.0.21
+opencv-python==4.1.1.26
 Pillow==5.4.1
 scikit-image==0.15.0
 scipy==1.0.0
