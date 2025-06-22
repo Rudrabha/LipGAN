@@ -2,8 +2,209 @@ LipGAN
 ===================
 *Generate realistic talking faces for any human speech and face identity.*
 
+# Commercial Version
 
+Create your first lipsync generation in minutes. Please note, the commercial version is of a much higher quality than the old open source model!
 
+## Create your API Key
+
+Create your API key from the [Dashboard](https://sync.so/keys). You will use this key to securely access the Sync API.
+
+## Make your first generation
+
+The following example shows how to make a lipsync generation using the Sync API.
+
+### Python
+
+#### Step 1: Install Sync SDK
+
+```bash
+pip install syncsdk
+```
+
+#### Step 2: Make your first generation
+
+Copy the following code into a file `quickstart.py` and replace `YOUR_API_KEY_HERE` with your generated API key.
+
+```python
+# quickstart.py
+import time
+from sync import Sync
+from sync.common import Audio, GenerationOptions, Video
+from sync.core.api_error import ApiError
+
+# ---------- UPDATE API KEY ----------
+# Replace with your Sync.so API key
+api_key = "YOUR_API_KEY_HERE" 
+
+# ----------[OPTIONAL] UPDATE INPUT VIDEO AND AUDIO URL ----------
+# URL to your source video
+video_url = "https://assets.sync.so/docs/example-video.mp4"
+# URL to your audio file
+audio_url = "https://assets.sync.so/docs/example-audio.wav"
+# ----------------------------------------
+
+client = Sync(
+    base_url="https://api.sync.so", 
+    api_key=api_key
+).generations
+
+print("Starting lip sync generation job...")
+
+try:
+    response = client.create(
+        input=[Video(url=video_url),Audio(url=audio_url)],
+        model="lipsync-2",
+        options=GenerationOptions(sync_mode="cut_off"),
+        outputFileName="quickstart"
+    )
+except ApiError as e:
+    print(f'create generation request failed with status code {e.status_code} and error {e.body}')
+    exit()
+
+job_id = response.id
+print(f"Generation submitted successfully, job id: {job_id}")
+
+generation = client.get(job_id)
+status = generation.status
+while status not in ['COMPLETED', 'FAILED']:
+    print('polling status for generation', job_id)
+    time.sleep(10)
+    generation = client.get(job_id)
+    status = generation.status
+
+if status == 'COMPLETED':
+    print('generation', job_id, 'completed successfully, output url:', generation.output_url)
+else:
+    print('generation', job_id, 'failed')
+```
+
+Run the script:
+
+```bash
+python quickstart.py
+```
+
+#### Step 3: Done!
+
+It may take a few minutes for the generation to complete. You should see the generated video URL in the terminal post completion.
+
+---
+
+### TypeScript
+
+#### Step 1: Install dependencies
+
+```bash
+npm i @sync.so/sdk
+```
+
+#### Step 2: Make your first generation
+
+Copy the following code into a file `quickstart.ts` and replace `YOUR_API_KEY_HERE` with your generated API key.
+
+```typescript
+// quickstart.ts
+import { SyncClient, SyncError } from "@sync.so/sdk";
+
+// ---------- UPDATE API KEY ----------
+// Replace with your Sync.so API key
+const apiKey = "YOUR_API_KEY_HERE";
+
+// ----------[OPTIONAL] UPDATE INPUT VIDEO AND AUDIO URL ----------
+// URL to your source video
+const videoUrl = "https://assets.sync.so/docs/example-video.mp4";
+// URL to your audio file
+const audioUrl = "https://assets.sync.so/docs/example-audio.wav";
+// ----------------------------------------
+
+const client = new SyncClient({ apiKey });
+
+async function main() {
+    console.log("Starting lip sync generation job...");
+
+    let jobId: string;
+    try {
+        const response = await client.generations.create({
+            input: [
+                {
+                    type: "video",
+                    url: videoUrl,
+                },
+                {
+                    type: "audio",
+                    url: audioUrl,
+                },
+            ],
+            model: "lipsync-2",
+            options: {
+                sync_mode: "cut_off",
+            },
+            outputFileName: "quickstart"
+        });
+        jobId = response.id;
+        console.log(`Generation submitted successfully, job id: ${jobId}`);
+    } catch (err) {
+        if (err instanceof SyncError) {
+            console.error(`create generation request failed with status code ${err.statusCode} and error ${JSON.stringify(err.body)}`);
+        } else {
+            console.error('An unexpected error occurred:', err);
+        }
+        return;
+    }
+
+    let generation;
+    let status;
+    while (status !== 'COMPLETED' && status !== 'FAILED') {
+        console.log(`polling status for generation ${jobId}...`);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            generation = await client.generations.get(jobId);
+            status = generation.status;
+        } catch (err) {
+            if (err instanceof SyncError) {
+                console.error(`polling failed with status code ${err.statusCode} and error ${JSON.stringify(err.body)}`);
+            } else {
+                console.error('An unexpected error occurred during polling:', err);
+            }
+            status = 'FAILED';
+        }
+    }
+
+    if (status === 'COMPLETED') {
+        console.log(`generation ${jobId} completed successfully, output url: ${generation?.outputUrl}`);
+    } else {
+        console.log(`generation ${jobId} failed`);
+    }
+}
+
+main();
+```
+
+Run the script:
+
+```bash
+npx tsx quickstart.ts -y
+```
+
+#### Step 3: Done!
+
+You should see the generated video URL in the terminal.
+
+---
+
+## Next Steps
+
+Well done! You've just made your first lipsync generation with sync.so!
+
+Ready to unlock the full potential of lipsync? Dive into our interactive [Studio](https://sync.so/login) to experiment with all available models, or explore our [API Documentation](/api-reference) to take your lip-sync generations to the next level!
+
+## Contact
+- prady@sync.so
+- pavan@sync.so
+- sanjit@sync.so
+
+# Non Commercial, Open-source version
 [[Paper]](https://dl.acm.org/doi/10.1145/3343031.3351066) | [[Project Page]](http://cvit.iiit.ac.in/research/projects/cvit-projects/facetoface-translation)  | [[Demonstration Video]](https://www.youtube.com/watch?v=aHG6Oei8jF0&list=LL2W0lqk_iPaqSlgPZ9GNv6w)
 
 ![image](https://drive.google.com/uc?export=view&id=1Y2isqWhUmAeYhbwK54tIqYOX0Pb5oH9w)
